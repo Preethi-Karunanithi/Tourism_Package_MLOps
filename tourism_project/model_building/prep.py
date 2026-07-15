@@ -74,32 +74,23 @@ df = pd.get_dummies(df, columns=['Age_Group'], drop_first=True)
 df['Gender'] = df['Gender'].replace('Fe Male', 'Female')
 df['MaritalStatus'] = df['MaritalStatus'].replace('Unmarried', 'Single')
 
-# Convert categorical columns (only those that actually exist)
-categorical_columns = [
-    'TypeofContact',
-    'Occupation',
-    'Gender',
-    'MaritalStatus',
-    'ProductPitched'
-]
+# --------------------------------------------------
+# Encode all categorical columns automatically
+# --------------------------------------------------
 
-for col in categorical_columns:
-    if col in df.columns:
-        df[col] = df[col].astype('category')
+categorical_cols = df.select_dtypes(include=["object", "category"]).columns.tolist()
 
-# Dummy encode categorical columns
-dummy_columns = [
-    'Type',
-    'Gender',
-    'MaritalStatus',
-    'TypeofContact',
-    'Occupation',
-    'ProductPitched'
-]
+# Remove target column if present
+if "ProdTaken" in categorical_cols:
+    categorical_cols.remove("ProdTaken")
 
-dummy_columns = [col for col in dummy_columns if col in df.columns]
+print("Categorical columns:", categorical_cols)
 
-df = pd.get_dummies(df, columns=dummy_columns, drop_first=True)
+df = pd.get_dummies(
+    df,
+    columns=categorical_cols,
+    drop_first=True
+)
 
 target_col = 'ProdTaken'
 
