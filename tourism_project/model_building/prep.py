@@ -14,11 +14,16 @@ token = os.getenv("HF_TOKEN")
 
 
 # for data preprocessing and pipeline creation
-from sklearn.model_selection import train_test_split
+#from sklearn.model_selection import train_test_split
 # for converting text data in to numerical representation
-from sklearn.preprocessing import LabelEncoder
+#from sklearn.preprocessing import LabelEncoder
 # for hugging face space authentication to upload files
-from huggingface_hub import login, HfApi
+#from huggingface_hub import login, HfApi
+
+import os
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from huggingface_hub import HfApi
 
 # Define constants for the dataset and output paths
 
@@ -28,7 +33,12 @@ token = os.getenv("HF_TOKEN")
 api = HfApi(token=os.getenv("HF_TOKEN"))
 
 # create  dataset as you creating space
-DATASET_PATH = "/content/tourism_project/data/tourism-package-prediction.csv"
+#DATASET_PATH = "/content/tourism_project/data/tourism-package-prediction.csv"
+
+DATASET_PATH = "tourism_project/data/tourism-package-prediction.csv"
+
+if not os.path.exists(DATASET_PATH):
+    raise FileNotFoundError(f"Dataset not found: {DATASET_PATH}")
 
 df = pd.read_csv(DATASET_PATH)
 print("Dataset loaded successfully.")
@@ -109,7 +119,11 @@ ytest.to_csv("ytest.csv",index=False)
 
 files = ["Xtrain.csv","Xtest.csv","ytrain.csv","ytest.csv"]
 
-for file_path in files:
+#for file_path in files:
+
+    for file_path in files:
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"{file_path} was not created.")
     api.upload_file(
         path_or_fileobj=file_path,
         path_in_repo=file_path.split("/")[-1],  # just the filename
