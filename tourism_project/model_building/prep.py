@@ -30,7 +30,10 @@ from huggingface_hub import HfApi
 
 token = os.getenv("HF_TOKEN")
 
-api = HfApi(token=os.getenv("HF_TOKEN"))
+if token is None:
+    raise ValueError("HF_TOKEN environment variable is not set.")
+
+api = HfApi(token=token)
 
 # create  dataset as you creating space
 #DATASET_PATH = "/content/tourism_project/data/tourism-package-prediction.csv"
@@ -117,18 +120,17 @@ ytrain.to_csv("ytrain.csv",index=False)
 ytest.to_csv("ytest.csv",index=False)
 
 
-files = ["Xtrain.csv","Xtest.csv","ytrain.csv","ytest.csv"]
+files = ["Xtrain.csv", "Xtest.csv", "ytrain.csv", "ytest.csv"]
 
-#for file_path in files:
-
-    for file_path in files:
+for file_path in files:
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"{file_path} was not created.")
+
     api.upload_file(
         path_or_fileobj=file_path,
-        path_in_repo=file_path.split("/")[-1],  # just the filename
-
+        path_in_repo=os.path.basename(file_path),
         repo_id="PreethiKarunanithi/Preethi-first-project-space",
-
         repo_type="dataset",
     )
+
+print("All files uploaded successfully.")
