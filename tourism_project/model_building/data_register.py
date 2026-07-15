@@ -1,6 +1,6 @@
 
 
-from google.colab import userdata
+#from google.colab import userdata
 from huggingface_hub import HfApi
 
 from huggingface_hub.utils import RepositoryNotFoundError, HfHubHTTPError
