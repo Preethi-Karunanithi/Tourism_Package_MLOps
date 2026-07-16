@@ -1,4 +1,9 @@
 
+from google.colab import userdata
+import os
+
+os.environ["HF_TOKEN"] = userdata.get("HF_TOKEN")
+
 import pandas as pd
 import sklearn
 import os
